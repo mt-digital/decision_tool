@@ -13,7 +13,7 @@ title:               Climate Change and Ag Decision Tool
 tagline:             'Data you can use'
 description:         'A decision tool for agricultural consultants'
 url:                 http://mtpain.github.io/decision_tool
-baseurl:             decision_tool/
+baseurl:             /
 paginate:            5
 
 # About/contact
