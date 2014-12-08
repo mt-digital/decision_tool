@@ -29,7 +29,7 @@ $(function() {
 
     
     $('#Run').click( function() {
-            alert("Soon this will run your awesome decision tool!");
+            alert("Soon this will run your awesome decision tool on the counties you selected:\n" + $('#counties').text());
         }
     );      
 }
