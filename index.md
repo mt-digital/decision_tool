@@ -12,7 +12,14 @@ title: Home
 
 ## Enter the counties you're interested in: 
 
-Enter New County: <input type="text" name="county" id="county" placeholder="Latah"></input>
+Type a new county and hit enter, then enter the next county. Press `RUN` when
+you've finished selecting.
+
+<h3>Enter New County: 
+<input type="text" name="county" id="county" placeholder="Latah"
+autocapitalize="words">
+</input>
+</h3>
 
 <button id="Add">Add County</button>
 

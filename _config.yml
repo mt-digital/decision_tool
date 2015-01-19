@@ -9,7 +9,7 @@ permalink:           pretty
 relative_permalinks: true
 
 # Setup
-title:               Climate Change and Ag Decision Tool
+title:               REACCH Decision Tool
 tagline:             'Data you can use'
 description:         'A decision tool for agricultural consultants'
 url:                 http://mtpain.github.io/decision_tool
