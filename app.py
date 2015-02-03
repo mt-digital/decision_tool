@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 from StringIO import StringIO
 
 app = Flask(__name__)
@@ -16,19 +16,41 @@ SURVEY_DATA = pd.read_csv("fake_2cnty_2q.csv")
 
 QUESTION_KEY = json.loads(open('question_key.json', 'r').read())
 
+
 @app.route('/')
 def hello():
     """splashy"""
     return "<a href='/results'>MAKE A SOME BAR CHARTS!!!!</a>"
 
 
-@app.route('/results')
+@app.route('/results', methods=['GET'])
 def show_results():
     """
     Show frequencies of responses to the questions.
     """
-    if len(request.args.keys()) == 0:
-        return _make_bar_views(1)
+    req_keys = request.args.keys()
+
+    if 'county' in req_keys and 'question' in req_keys:
+        county = request.args['county']
+        question = request.args['question']
+
+    elif 'county' in req_keys:
+
+        county = request.args['county']
+        question = 1
+
+    elif 'question' in req_keys:
+        county = "All"
+        question = request.args['question']
+
+    else:
+        county = "All"
+        question = 1
+
+    return render_template("county_plot.html", question=str(question),
+                           plot='<svg' + _make_bar_views(question,
+                                                         counties=[county])
+                                                         .split('<svg')[1])
 
 
 def _make_bar_views(question_number, counties=["All"]):
@@ -133,3 +155,6 @@ def _svg_bar_chart(responses, all_frequencies, frequencies=None,
     plt.close()
 
     return imgdata.buf
+
+if __name__ == '__main__':
+    app.run(debug=True)
