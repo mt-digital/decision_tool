@@ -1,6 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 
-{{ plot|safe }}
+<!--<div>-->
+{% if prev_county %}
+<!--<div style="text-align:left">-->
+    <a align=left href="/results?county={{ prev_county }}">
+        &lt;&lt;{{ prev_county }}
+    </a>
+<!--</div>-->
+{% endif %}
+
+{% if next_county %}
+<!--<div style="text-align:right">-->
+    <a align=right href="/results?county={{ next_county }}">
+        {{ next_county }}&gt;&gt;
+    </a>
+<!--</div>-->
+{% endif %}
+<!--</div>-->
+
+
+<h1 align=center>{{ county }}</h1>
+
+<p>
+  {{ county }} county is a good county. There they might like pigs or they might
+  think ice cream is tasty. Look below to see!
+</p>
+
+{% for question_plot in question_plots %}
+    <br><br>
+    {{ question_plot.plot|safe }}
+{% endfor %}
 
 {% endblock %}
