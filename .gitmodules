@@ -1,0 +1,3 @@
+[submodule "static/jquery-dropdown"]
+	path = static/jquery-dropdown
+	url = https://github.com/claviska/jquery-dropdown.git

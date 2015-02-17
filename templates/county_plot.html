@@ -1,29 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!--<div>-->
-{% if prev_county %}
-<!--<div style="text-align:left">-->
-    <a align=left href="/results?county={{ prev_county }}">
-        &lt;&lt;{{ prev_county }}
-    </a>
-<!--</div>-->
-{% endif %}
-
-{% if next_county %}
-<!--<div style="text-align:right">-->
-    <a align=right href="/results?county={{ next_county }}">
-        {{ next_county }}&gt;&gt;
-    </a>
-<!--</div>-->
-{% endif %}
-<!--</div>-->
+<h3>Select counties: 
+<!--<input type="text" name="county" id="county" placeholder="Latah"-->
+<!--autocapitalize="words">-->
+<!--</input>-->
+</h3>
+<form method="POST">
+    {{ form.name() }}
+    {{ form.submit() }}   <!--<button id="Add">Run Counties</button>-->
+</form>
 
 
-<h1 align=center>{{ county }}</h1>
+<h1 align=center>{{ counties }}</h1>
 
 <p>
-  {{ county }} county is a good county. There they might like pigs or they might
+  {{ counties }} county is a good county. There they might like pigs or they might
   think ice cream is tasty. Look below to see!
 </p>
 
@@ -31,5 +23,7 @@
     <br><br>
     {{ question_plot.plot|safe }}
 {% endfor %}
+
+<!--<script src="/static/select_counties.js"></script>-->
 
 {% endblock %}

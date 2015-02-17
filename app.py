@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+
 """
 Web app to
 """
@@ -6,11 +8,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-
 from flask import Flask, request, render_template
+from flask.ext.wtf import Form
+from wtforms import StringField, SelectField, SelectMultipleField, SubmitField
 from StringIO import StringIO
 
 app = Flask(__name__)
+
+app.secret_key = 'hard to guess string'
 
 SURVEY_DATA = pd.read_csv("fake_2cnty_2q.csv")
 
@@ -25,7 +30,7 @@ def hello():
 QUESTIONS = ["Pigs Rule!", "I like ice cream"]
 
 
-@app.route('/results', methods=['GET'])
+@app.route('/results', methods=['GET', 'POST'])
 def show_results():
     """
     Show frequencies of responses to the questions.
@@ -37,28 +42,32 @@ def show_results():
     counties.sort()
     counties = ["All"] + list(counties.unique())
 
-    county = request.args['county'] if 'county' in req_keys else "All"
-    county_idx = counties.index(county)
+    form = CountyForm()
 
-    if county_idx == 0:
-        prev_county = None
-        next_county = counties[county_idx + 1]
-    elif county_idx == len(counties) - 1:
-        prev_county = counties[county_idx - 1]
-        next_county = None
+    if not form.name.data:
+        counties = ['All']
     else:
-        prev_county = counties[county_idx - 1]
-        next_county = counties[county_idx + 1]
+        counties = form.name.data
 
-    # this plots dictionary contains the question and the svg of the q's plot
-    question_plots = [{'question': q, 'plot': '<svg' +
+    question_plots = [{'question': q, 'plot': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" ' +
                        # four unwanted lines before <svg>; strip them
-                       _make_bar_views(q, counties=[county]).split('<svg')[1]}
+                       _make_bar_views(q, counties=counties).split('<svg')[1]}
                       for q in QUESTIONS]
 
+
     return render_template("county_plot.html", question_plots=question_plots,
-                           county=county, next_county=next_county,
-                           prev_county=prev_county)
+                           counties=', '.join(counties), form=form)
+
+
+class CountyForm(Form):
+    """Dropdown, multi select form to pick counties to copmare"""
+
+    name = SelectMultipleField(u'County',
+                               choices=[('All', 'All'),
+                                        ('Latah', 'Latah'),
+                                        ('Whitman', 'Whitman')])
+
+    submit = SubmitField('Compare Counties')
 
 
 def _make_bar_views(question, counties=["All"]):
@@ -74,9 +83,11 @@ def _make_bar_views(question, counties=["All"]):
     agg_all = q_df.groupby('response').agg({'frequency': np.mean})
 
     # aggregate (mean of frequencies) over selected counties if any
-    if counties != "All":
-        agg = q_df[q_df.county.isin(counties)].groupby('response')\
-                                              .agg({'frequency': np.mean})
+    print counties
+
+    # if counties != ["All"]:
+    agg = q_df[q_df.county.isin(counties)].groupby('response')\
+                                          .agg({'frequency': np.mean})
 
     # put responses in the right order TODO make general for any response set
 
