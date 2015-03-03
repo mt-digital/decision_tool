@@ -1,0 +1,5 @@
+1. NKN and REACCH Logos
+2. Bar colors: blue, green and brown
+3. Legend out of the way, attached to each plot. First go have below
+   plot
+4. Instead of "Frequency", "% Response" for x axis label
