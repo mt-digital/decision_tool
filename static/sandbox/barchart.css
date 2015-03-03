@@ -1,5 +1,27 @@
 line.axis {
     fill: none;
     /*stroke: black;*/
-    shape-rendering: crispEdges;
 } 
+
+svg {
+  shape-rendering: crispEdges;
+  /*margin: 15px;*/
+  padding: 15px;
+}
+
+text {
+  font-family: sans-serif; 
+}
+
+text.freq-label {
+    text-anchor: middle;
+}
+
+text.title {
+  fill: "black"; 
+  text-anchor: middle;
+}
+
+text.response-label {
+  text-anchor: end; 
+}
