@@ -1,161 +1,111 @@
+#!/usr/local/bin/python
 """
-Web app to
+Web app for displaying survey results
 """
 import json
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
-
-from flask import Flask, request, render_template
-from StringIO import StringIO
+from flask import Flask, render_template
+from flask.ext.wtf import Form
+from wtforms import SelectMultipleField, SubmitField
 
 app = Flask(__name__)
 
-SURVEY_DATA = pd.read_csv("fake_2cnty_2q.csv")
+app.secret_key = 'hard to guess string'
 
-QUESTION_KEY = json.loads(open('question_key.json', 'r').read())
+DF = pd.read_csv('static/responses_no_response_rate.csv',
+                 names=['region', 'question', 'response', 'frequency'],
+                 header=None)
 
+REGIONS = DF.region.unique()
 
-@app.route('/')
-def hello():
-    """splashy"""
-    return "<a href='/results'>MAKE A SOME BAR CHARTS!!!!</a>"
-
-
-@app.route('/results', methods=['GET'])
-def show_results():
+@app.route('/', methods=['GET', 'POST'])
+def index():
     """
-    Show frequencies of responses to the questions.
+    Mostly single-page web app, here the index is used to view the results
+    given form inputs. The default view is just "ALL", the whole region
+    together.
     """
-    req_keys = request.args.keys()
+    # default, will append more if user selects more
+    regions = ["ALL"]
 
-    if 'county' in req_keys and 'question' in req_keys:
-        county = request.args['county']
-        question = request.args['question']
+    form = CountyForm()
 
-    elif 'county' in req_keys:
-
-        county = request.args['county']
-        question = 1
-
-    elif 'question' in req_keys:
-        county = "All"
-        question = request.args['question']
-
+    if not form.regions.data:
+        regions = ['ALL']
     else:
-        county = "All"
-        question = 1
-    question_list = ["I like donuts.", "Pigs are cool!"]
-    question_text = question_list[int(question) - 1]
-    return render_template("county_plot.html", question=question_text,
-                           plot='<svg' + _make_bar_views(question,
-                                                         counties=[county])
-                                                         .split('<svg')[1])
+        regions = form.regions.data
+
+    # data dict will be in the proper form for JSON data to be passed to templ
+    print regions
+    json_data = make_data_json(regions)
+
+    javascript = render_template('barchart.js', json_data=json_data,
+                                 n_regions=len(regions))
+
+    return render_template('index.html', javascript=javascript, form=form)
 
 
-def _make_bar_views(question_number, counties=["All"]):
+#: Questions in the order requested by LB
+ORDERED_QUESTIONS = ['9', '8a', '18c', '18d', '18a']
+
+
+QUESTION_LOOKUP = \
+    {'9': 'Indicate which of the following categories best fits your tillage practice',
+     '8a': 'I consider myself to be an aggressive adopter of conservation practices',
+     '18c': 'Human activities are the primary cause of climate change',
+     '18d': 'I will have to make serious changes to my farming operation to adjust to climate change',
+     '18a': 'I have observed changes in weather patterns over my lifeteime'}
+
+
+def make_data_json(regions):
     """
-    For now use default of Latah
+    Given the counties the user is interested in, select the rows from the
+    dataframe and return a JSON representation for use in the javascript
     """
-    sd = SURVEY_DATA
-    # take only the data for the particular question
-    q_df = sd[sd['question_number'] == int(question_number)]
+    regions_df = DF[DF.region.isin(regions)]
 
-    # whether or not there are counties, we will need the all-counties frame
-    agg_all = q_df.groupby('response').agg({'frequency': np.mean})
+    data_dict_list = []
 
-    # aggregate (mean of frequencies) over selected counties if any
-    if counties != "All":
-        agg = q_df[q_df.county.isin(counties)].groupby('response')\
-                                              .agg({'frequency': np.mean})
+    # each dataset has a list of objects with question at the top level
+    for q in ORDERED_QUESTIONS:
 
-    # put responses in the right order TODO make general for any response set
+        q_data_dict = {}
+        q_data_dict.update(question=QUESTION_LOOKUP[q])
+        q_df = regions_df[regions_df.question == q]
 
-    # this will make "Strongly Disagree" on bottom and "Strongly Agree" on top
-    order = ["Strongly Disagree", "Disagree",
-             "Neutral", "Agree", "Strongly Agree"]
+        # each question has region_responses: region name, and array of JSON
+        # tuples of response and percent responding that response
+        region_responses = []
+        for region in regions:
 
-    # reorder the aggregated data frame by the order specified
-    reindexed = agg.reindex(order)
+            region_dict = dict(region=region)
 
-    # extract responses, used whether or not we have a sub-root collective set
-    responses = reindexed.index
+            reg_qst_df = q_df[q_df.region == region]
+            pct_response = reg_qst_df.frequency
+            pct_response = pct_response/pct_response.sum()
 
-    # get collective frequencies of the entire root Palouse region
-    all_frequencies = agg_all.reindex(order).frequency
+            resp_pct = zip(reg_qst_df.response, pct_response)
 
-    # return with only root,
-    # or also with separate sub-root collective freq and root coll
-    if counties == ["All"]:
-        # takes responses and corresponding frequencies, order-independent
-        return _svg_bar_chart(responses, all_frequencies, title=counties[0])
-    else:
-        # reorder and select the counties' collective frequencies
-        frequencies = reindexed.frequency
+            region_dict.update(responses=\
+                [{'response': rp[0], 'frequency': rp[1]} for rp in resp_pct])
 
-        return _svg_bar_chart(responses, all_frequencies, frequencies,
-                              title=', '.join(counties))
+            region_responses.append(region_dict)
+
+        q_data_dict.update(region_responses=region_responses)
+
+        data_dict_list.append(q_data_dict)
+
+    return json.dumps(data_dict_list)
 
 
-def _svg_bar_chart(responses, all_frequencies, frequencies=None,
-                   title=None, svg_dpi=150,
-                   xpixels=1100, ypixels=800):
-    """
-    Create a bar chart with standard matplotlib barh, export as SVG
+class CountyForm(Form):
+    """Dropdown, multi select form to pick counties to copmare"""
 
-    Inputs:
-        responses, a list of possible survey responses like 'Strongly Agree'
-        frequencies, percentage of people giving index-corresponding response
+    regions = SelectMultipleField(u'Regions', choices=zip(REGIONS, REGIONS))
 
-    Returns: An SVG string representation of the bar chart generated by mplib
-    """
-    fig, ax = plt.subplots(figsize=(xpixels/svg_dpi, ypixels/svg_dpi))
+    submit = SubmitField('Compare Regions')
 
-    fmin = 0.0
-    fmax = 0.5
-
-    plt.xlim([fmin, fmax])
-
-    response_idx = np.arange(len(responses))
-
-    # plot frequencies and all frequencies
-    bar_width = 0.35
-    opacity = 0.4
-
-    # plot the Palouse's collective frequency
-    plt.barh(response_idx + bar_width, all_frequencies, bar_width,
-             color='pink', alpha=opacity, label="All", zorder=10)
-
-    if frequencies is not None:
-        # plot the collective frequencies of the selected counties as well
-        plt.barh(response_idx, frequencies, bar_width, color='green',
-                 alpha=opacity, label=title, zorder=10)
-
-    plt.yticks(response_idx + 0.5, responses, fontsize=14)
-
-    plt.xlabel("Frequency", fontsize=24)
-
-    plt.legend(loc='best', fontsize=16)
-
-    if title is not None:
-        plt.title(title)
-
-    # TODO between one graph and another, there are differences in y axis scale
-    # get ymin and ymax as the min and max of the set union of root
-    # and sub-root collection frequencies
-
-    plt.tight_layout()
-
-    # see this SO thread: http://tinyurl.com/mn4m83k
-    imgdata = StringIO()
-
-    fig.savefig(imgdata, format='svg')
-    imgdata.seek(0)
-
-    plt.close()
-
-    return imgdata.buf
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,37 @@
+line.axis {
+    fill: none;
+    /*stroke: black;*/
+} 
+div.plot {
+    margin: 100px 0;
+} 
+svg {
+  shape-rendering: crispEdges;
+  /*padding: 15px;*/
+  /*margin: 100px 0;*/
+  /*width: 90%;*/
+}
+
+rect {
+  /*opacity: 0.75;*/
+  opacity: 0.85;
+  /*opacity: 0.9;*/
+} 
+
+text {
+  font-family: sans-serif; 
+}
+
+text.freq-label {
+    text-anchor: middle;
+}
+
+text.title {
+  fill: "black"; 
+  text-anchor: middle;
+  font-weight: bold;
+}
+
+text.response-label {
+  text-anchor: end; 
+}

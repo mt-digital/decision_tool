@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Select counties: 
+</h3>
+<form method="POST">
+    {{ form.regions() }}
+    {{ form.submit() }}
+</form>
+
+  <h1> Yo, there be {{ n_counties }} counties! </h1>
+
+     <div class="plot" id="plot1"></div>        
+     <div class="plot" id="plot2"></div>        
+     <div class="plot" id="plot3"></div>        
+     <div class="plot" id="plot4"></div>        
+     <div class="plot" id="plot5"></div>        
+
+  <script src="static/d3.min.js" charset="utf-8"></script>
+  <script>
+
+{# see http://flask.pocoo.org/docs/0.10/templating/#standard-filters #}
+  {{ javascript|safe }} 
+  </script>
+
+{% endblock %}
