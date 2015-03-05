@@ -6,7 +6,7 @@ var datasets = {{ json_data|safe }};
 
 var colors = ["dodgerblue", "orange", "green"];
 
-var response_width = 150, legend_text_width = 270;
+var response_width = 170, legend_text_width = 270;
 
 var margin = {top: 35, right: legend_text_width, 
               left: response_width, bottom: 30};
@@ -15,16 +15,16 @@ var max_responses = 5;
 
 var bar_ypad = 8,
     min_bar_spacing = 15,
-    max_bar_height = 50;
+    max_bar_height = 60;
 
 var bar_ypad = 8;
 
 var total_bar_height = max_bar_height*max_responses;
 
 var plot_height = max_bar_height*max_responses + bar_ypad*2 + (max_responses-1)*min_bar_spacing ; //310; // 270;
-var plot_width = 360;
+var plot_width = 390;
 
-var tick_font_size = 15;
+var tick_font_size = 17;
 
 var reg_resps = datasets.map(function(el) { return el.region_responses; });
 var resps = [];

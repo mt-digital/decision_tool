@@ -10,6 +10,7 @@ svg {
   /*padding: 15px;*/
   /*margin: 100px 0;*/
   /*width: 90%;*/
+
 }
 
 rect {
@@ -19,7 +20,7 @@ rect {
 } 
 
 text {
-  font-family: sans-serif; 
+  font-family: "PT Sans", sans-serif; 
 }
 
 text.freq-label {
@@ -34,4 +35,11 @@ text.title {
 
 text.response-label {
   text-anchor: end; 
+}
+
+.logo-head { width: 100%; }
+
+.logo {
+    float: left;
+    padding: 10px;
 }

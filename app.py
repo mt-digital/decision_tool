@@ -36,17 +36,27 @@ def index():
     else:
         regions = form.regions.data
 
+    # don't allow more than three selections
+    if len(regions) > 3:
+        regions = regions[:3]
+
     # data dict will be in the proper form for JSON data to be passed to templ
-    print regions
     json_data = make_data_json(regions)
 
     javascript = render_template('barchart.js', json_data=json_data,
                                  n_regions=len(regions))
+    all_region_summaries = \
+        json.loads(open('static/region_summaries.json', 'r').read()[3:])
 
-    return render_template('index.html', javascript=javascript, form=form)
+    region_summaries = [(r, all_region_summaries[r])
+                        for r in regions if r in all_region_summaries]
 
+    print region_summaries
 
-#: Questions in the order requested by LB
+    return render_template('index.html', javascript=javascript, form=form,
+                           region_summaries=region_summaries)
+
+#: Questions in the order requested by L
 ORDERED_QUESTIONS = ['9', '8a', '18c', '18d', '18a']
 
 
@@ -97,6 +107,14 @@ def make_data_json(regions):
         data_dict_list.append(q_data_dict)
 
     return json.dumps(data_dict_list)
+
+
+def extract_():
+    """
+    docstring for extract_
+
+    """
+    pass
 
 
 class CountyForm(Form):
