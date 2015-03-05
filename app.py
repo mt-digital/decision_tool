@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 app.secret_key = 'hard to guess string'
 
-DF = pd.read_csv('static/responses_no_response_rate.csv',
+DF = pd.read_csv('static/data/responses_no_response_rate.csv',
                  names=['region', 'question', 'response', 'frequency'],
                  header=None)
 
@@ -46,12 +46,10 @@ def index():
     javascript = render_template('barchart.js', json_data=json_data,
                                  n_regions=len(regions))
     all_region_summaries = \
-        json.loads(open('static/region_summaries.json', 'r').read()[3:])
+        json.loads(open('static/data/region_summaries.json', 'r').read()[3:])
 
     region_summaries = [(r, all_region_summaries[r])
                         for r in regions if r in all_region_summaries]
-
-    print region_summaries
 
     return render_template('index.html', javascript=javascript, form=form,
                            region_summaries=region_summaries)

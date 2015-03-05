@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="log-head">
-  <div class="logo" style="position:relative; top:-10px"><img src="static/reacch.jpeg" alt="REACCH"></div>
-  <div class="logo"><img src="static/nkn_logo.png" alt="NKN"></div>
+  <div class="logo" style="position:relative; top:-10px"><img src="static/img/reacch.jpeg" alt="REACCH"></div>
+  <div class="logo"><img src="static/img/nkn_logo.png" alt="NKN"></div>
 </div>
 
 <br><br>
@@ -22,6 +22,7 @@ CTRL-Click. On Mac, Command-Click.
     font-size:15px") }}
 </form>
 
+{% if region_summaries %}
   {% if region_summaries|length == 1 %}
     <h2>Report for {{ region_summaries[0][0] }}</h2>
   {% elif region_summaries|length == 2 %}
@@ -30,6 +31,7 @@ CTRL-Click. On Mac, Command-Click.
     <h2>Comparison of {{ region_summaries[0][0] }}, {{
       region_summaries[1][0] }}, and {{ region_summaries[2][0] }}
   {% endif %}
+{% endif %}
 
      <div class="plot" id="plot1"></div>        
      <div class="plot" id="plot2"></div>        
@@ -44,7 +46,7 @@ CTRL-Click. On Mac, Command-Click.
 
   {% endfor %}
 
-  <script src="static/d3.min.js" charset="utf-8"></script>
+  <script src="static/js/d3.min.js" charset="utf-8"></script>
   <script>
 
 {# see http://flask.pocoo.org/docs/0.10/templating/#standard-filters #}
