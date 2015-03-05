@@ -6,7 +6,7 @@ import json
 import pandas as pd
 
 from flask import Flask, render_template
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from wtforms import SelectMultipleField, SubmitField
 
 app = Flask(__name__)

@@ -19,6 +19,9 @@ rect {
   /*opacity: 0.9;*/
 } 
 
+#regions, #submit {
+    font-family: "PT Sans";
+}
 text {
   font-family: "PT Sans", sans-serif; 
 }

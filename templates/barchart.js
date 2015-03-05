@@ -9,7 +9,7 @@ var colors = ["dodgerblue", "orange", "green"];
 var response_width = 170, legend_text_width = 270;
 
 var margin = {top: 35, right: legend_text_width, 
-              left: response_width, bottom: 30};
+              left: response_width, bottom: 60};
 // strong agree, somewhat agree, neutral, somewhat disagg, strong disagg
 var max_responses = 5;
 
@@ -248,7 +248,10 @@ var make_plots = function(datasets, n_regions)
     //var title_font_size = 18;
     //var long_title_size = 15;
     // the third one has a long title
-    var title_font_size = (i != 4) ? 18 : 16;
+    var full_title_font_size = 20;
+    var smaller_title_font_size = full_title_font_size - .2*full_title_font_size
+    var title_font_size = (i != 4) ? full_title_font_size 
+                                   : smaller_title_font_size;
     svg.append("text")
          .attr("class", "title")
          .text(questions[i-1])
@@ -257,6 +260,17 @@ var make_plots = function(datasets, n_regions)
             "y": margin.top - 12.0,
             "font-size": title_font_size
          });
+
+    svg.append("text")
+        .attr("class", "x-label")
+        .text("% Response")
+        .attr({
+          "x": margin.left + plot_width/2.0,
+          "y": margin.top + margin.bottom + plot_height - .4*full_title_font_size,
+          "font-size": full_title_font_size,
+          "text-anchor": "middle",
+          "font-weight": "bold"
+        });
 
     make_guide_lines(svg, dataset);
 
