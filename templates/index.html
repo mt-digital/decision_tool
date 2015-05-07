@@ -2,10 +2,7 @@
 
 {% block content %}
 <h3>Select counties:</h3>
-<p style="font-size:14px">Limit three. Selecting more will be ignored. 
-</p>
-<p style="font-size:14px">On Windows, select multiple using
-CTRL-Click. On Mac, Command-Click.
+<p style="font-size:14px">Limit three.
 </p>
 <form method="POST">
       {{ form.regions(id="region-select") }}
@@ -14,7 +11,35 @@ CTRL-Click. On Mac, Command-Click.
 <script>
  $(function() { 
      $('#region-select').multiselect(
-       { 'maxHeight': 600
+       { 'maxHeight': 600,
+         // use 'onChange' here to limit the number of choices to three
+         onChange: function(option, checked) {
+                // Get selected options.
+                var selectedOptions = $('#region-select option:selected');
+ 
+                if (selectedOptions.length >= 3) {
+                    // Disable all other checkboxes.
+                    var nonSelectedOptions = $('#region-select option').filter(function() {
+                        return !$(this).is(':selected');
+                    });
+ 
+                    var dropdown = $('#region-select').siblings('.multiselect-container');
+                    nonSelectedOptions.each(function() {
+                        var input = $('input[value="' + $(this).val() + '"]');
+                        input.prop('disabled', true);
+                        input.parent('li').addClass('disabled');
+                    });
+                }
+                else {
+                    // Enable all checkboxes.
+                    var dropdown = $('#region-select').siblings('.multiselect-container');
+                    $('#region-select option').each(function() {
+                        var input = $('input[value="' + $(this).val() + '"]');
+                        input.prop('disabled', false);
+                        input.parent('li').addClass('disabled');
+                    });
+                }
+            }
         }
       );
    }

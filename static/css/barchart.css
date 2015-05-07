@@ -47,11 +47,8 @@ text.response-label {
     padding: 10px;
 }
 
-li{
-  margin: 10px;
-}
-
 #banner {
   background-color: lightgrey;
-  padding: 10px 10px 10px 25px;
+  padding: 3px 10px 10px 10px;
+  text-align: right;
 }
