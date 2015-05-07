@@ -1,50 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="log-head">
-  <div class="logo" style="position:relative; top:-10px"><img src="static/img/reacch.jpeg" alt="REACCH"></div>
-  <div class="logo"><img src="static/img/nkn_logo.png" alt="NKN"></div>
-</div>
-
-<br><br>
-
-<h3>Select counties :</h3>
+<h3>Select counties:</h3>
 <p style="font-size:14px">Limit three. Selecting more will be ignored. 
 </p>
 <p style="font-size:14px">On Windows, select multiple using
 CTRL-Click. On Mac, Command-Click.
 </p>
 <form method="POST">
-    {{ form.regions(style="color:#8f5536; height: 160px; width: 400px; font-size:15px") }}
-    {{ form.submit(style="position:relative; top:-70px; left: 0px;
-    height:50px; width:200px; background-color:#8f5536; color:#fff;
-    font-size:15px") }}
+      {{ form.regions(id="region-select") }}
+      {{ form.submit() }}
 </form>
-
-{% if region_summaries %}
-  {% if region_summaries|length == 1 %}
-    <h2>Report for {{ region_summaries[0][0] }}</h2>
-  {% elif region_summaries|length == 2 %}
-    <h2>Comparison of {{ region_summaries[0][0] }} and {{ region_summaries[1][0] }}</h2>
-  {% else %}
-    <h2>Comparison of {{ region_summaries[0][0] }}, {{
-      region_summaries[1][0] }}, and {{ region_summaries[2][0] }}
+<script>
+ $(function() { 
+     $('#region-select').multiselect(
+       { 'maxHeight': 600
+        }
+      );
+   }
+  );
+</script>
+<br>
+  {% if region_summaries %}
+    {% if region_summaries|length == 1 %}
+      <h2>Report for {{ region_summaries[0][0] }}</h2>
+    {% elif region_summaries|length == 2 %}
+      <h2>Comparison of {{ region_summaries[0][0] }} and {{ region_summaries[1][0] }}</h2>
+    {% else %}
+      <h2>Comparison of {{ region_summaries[0][0] }}, {{
+        region_summaries[1][0] }}, and {{ region_summaries[2][0] }}
+    {% endif %}
   {% endif %}
-{% endif %}
 
-     <div class="plot" id="plot1"></div>        
-     <div class="plot" id="plot2"></div>        
-     <div class="plot" id="plot3"></div>        
-     <div class="plot" id="plot4"></div>        
-     <div class="plot" id="plot5"></div>        
+       <div class="plot" id="plot1"></div>        
+       <div class="plot" id="plot2"></div>        
+       <div class="plot" id="plot3"></div>        
+       <div class="plot" id="plot4"></div>        
+       <div class="plot" id="plot5"></div>        
 
-  {% for el in region_summaries %}
-    {# el is a (region, summary) tuple #} 
-    <h2>{{ el[0] }}</h2> 
-    <p>{{ el[1] }}</p>
+    {% for el in region_summaries %}
+      {# el is a (region, summary) tuple #} 
+      <h2>{{ el[0] }}</h2> 
+      <p>{{ el[1] }}</p>
 
-  {% endfor %}
+    {% endfor %}
+</div>
 
   <script src="static/js/d3.min.js" charset="utf-8"></script>
   <script>

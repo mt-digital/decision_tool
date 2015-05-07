@@ -46,3 +46,12 @@ text.response-label {
     float: left;
     padding: 10px;
 }
+
+li{
+  margin: 10px;
+}
+
+#banner {
+  background-color: lightgrey;
+  padding: 10px 10px 10px 25px;
+}

@@ -11,22 +11,21 @@
       REACCH Climate Change Communication Tool
   </title>
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="static/bootstrap-multiselect.js"></script>
+  <link rel="stylesheet" href="static/bootstrap-multiselect.css" type="text/css"/>
   <!-- CSS -->
-  <link rel="stylesheet" href="/static/css/poole.css">
-  <link rel="stylesheet" href="/static/css/syntax.css">
-  <link rel="stylesheet" href="/static/css/lanyon.css">
+  <!--<link rel="stylesheet" href="/static/css/poole.css">-->
+  <!--<link rel="stylesheet" href="/static/css/syntax.css">-->
+  <!--<link rel="stylesheet" href="/static/css/lanyon.css">-->
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
   <link rel="stylesheet" href="/static/css/barchart.css">
 
-  <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144"
-    href="/static/img/apple-touch-icon-precomposed.png">
-
-  <link rel="shortcut icon" href="/static/img/favicon.ico">
-
-  <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
 </head>
 <style>
 svg {
@@ -38,73 +37,33 @@ svg {
     REACCH Producer's Survey Executive Summary
 </title>
 </head>
-
-  <body class="theme-base-0f">
-
-    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
-     styles, `#sidebar-checkbox` for behavior. -->
-<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
-<!-- Toggleable sidebar -->
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-item">
-    <p>A communication tool for agricultural consultants</p>
-  </div>
-
-  <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="">Home</a>
-        
-        <!--<a class="sidebar-nav-item" href="about/">About</a>-->
-        
-    <!--[><a class="sidebar-nav-item" href="/archive/v1.0.0.zip">Download</a><]-->
-    <a class="sidebar-nav-item" href="http://github.com/mtpain/decision_tool">GitHub project</a>
-    <span class="sidebar-nav-item">Currently v0.1</span>
-  </nav>
-
-  <div class="sidebar-item">
-    <p>
-      2015, Matthew A. Turner and Leigh A. Bernacchi. All rights reserved.
-    </p>
-  </div>
-</div>
-
+<body>
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
-    <div class="wrap">
-      <div class="masthead">
-        <div class="container">
-          <h3 class="masthead-title">
+<div class="container">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+  <div id="banner">
+          <h2 class="masthead-title">
             <a href="/" title="Home">REACCH Producers Survey Select
               Results</a>
-            <small>How do your growers compare?</small>
-          </h3>
-        </div>
-      </div>
+          </h2>
+          <h3>How do your growers compare? <small>A communication tool
+              for agricultural consultants</small></h3>
+    
+    <p>
+      2015, Matthew A. Turner and Leigh A. Bernacchi.
+    </p>
 
-      <div class="container content">
-        <p><head>
-</head></p>
+    <a href="http://github.com/mtpain/decision_tool">GitHub project</a>
+
+  </div>  <!--banner div end -->
 
 {% block content %}{% endblock %}
 
-    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+</div>
+<div class="col-md-1"></div>
 
-    <script>
-      (function(document) {
-        var toggle = document.querySelector('.sidebar-toggle');
-        var sidebar = document.querySelector('#sidebar');
-        var checkbox = document.querySelector('#sidebar-checkbox');
-
-        document.addEventListener('click', function(e) {
-          var target = e.target;
-
-          if(!checkbox.checked ||
-             sidebar.contains(target) ||
-             (target === checkbox || target === toggle)) return;
-
-          checkbox.checked = false;
-        }, false);
-      })(document);
-    </script>
 </body>
 
 </html>

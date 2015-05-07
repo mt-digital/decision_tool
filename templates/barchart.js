@@ -1,5 +1,5 @@
 /**
- * File: static/barchart.js
+ * File: templates/barchart.js
  */
 var n_regions = {{ n_regions|safe }};
 var datasets = {{ json_data|safe }};
